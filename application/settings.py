@@ -37,27 +37,20 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    #'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'debug_toolbar',
-    #'bootstrap3',
-    'core.apps.CoreConfig',
+    'debug_toolbar',
+    'user',
+    'core',
+    'like.apps.LikeConfig',
+    'comment.apps.CommentConfig',
+    'post.apps.PostConfig',
+    'entry.apps.EntryConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'social_django',
-    # 'rest_framework_social_oauth2',
-    # 'oauth2_provider',
-
-    #'social_auth',
-    #'social.apps.django_app.default',
-
-    #'allauth',
-    #'allauth.account',
-   # 'allauth.socialaccount',
-   # 'allauth.socialaccount.providers.vk',
 ]
 
 MIDDLEWARE = [
@@ -68,12 +61,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'debug_toolbar.middleware.DebugToolMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 INTERNAL_IPS = '127.0.0.1',
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'user.User'
 
 ROOT_URLCONF = 'application.urls'
 
@@ -86,8 +79,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -110,6 +101,17 @@ DATABASES = {
         'HOST': 'localhost',
     }
 }
+
+
+AUTHENTICATION_BACKENDS = (
+        'social_core.backends.vk.VKOAuth2',
+        'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_AUTHENTICATION_BACKENDS = ('social_core.backends.vk.VKOAuth2',)
+
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email',]
+
 
 
 # Password validation
@@ -151,46 +153,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-   # 'DEFAULT_PERMISSION_CLASSES': [
-  #      'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-  #  ],
-     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework_social_oauth2.authentication.SocialAuthentication',
-     )
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+                'rest_framework.authentication.BasicAuthentication',
+                'rest_framework.authentication.SessionAuthentication',
+                'rest_framework.authentication.TokenAuthentication',
+        )
 }
-# import social_core.pipeline.social_auth
-# SOCIAL_AUTH_PIPELINE = (
-#     'social_core.pipeline.social_auth.social_details',
-#     'social_core.pipeline.social_auth.social_uid',
-#     'social_core.pipeline.social_auth.social_user',
-#     'social_core.pipeline.user.get_username',
-#     'social_core.pipeline.user.create_user',
-#     'social_core.pipeline.social_auth.associate_user',
-#     'social_core.pipeline.social_auth.load_extra_data',
-#     'social_core.pipeline.user.user_details',
-#     'social_core.pipeline.social_auth.associate_by_email',
-# )
-
-# SOCIAL_AUTH_STORAGE = 'social_django'
-
-# import rest_framework.authentication
-AUTHENTICATION_BACKENDS = (
-    'social.backends.vk.VKOAuth2',
-    # 'rest_framework_social_oauth2.backends.DjangoOAuth2',
-   # 'social_core.backends.vk.VKOAuth2',
-   # 'social_auth.backends.contrib.vk.VKOAuth2Backend',
-    'django.contrib.auth.backends.ModelBackend',
-)
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 SOCIAL_AUTH_VK_OAUTH2_KEY = '6209090'
 SOCIAL_AUTH_VK_OAUTH2_SECRET = 'JLtYJgz307iRBkTKj39E'
-SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email',]
-SOCIAL_AUTH_AUTHENTICATION_BACKENDS = ('social_core.backends.vk.VKOAuth2',)
 
 LOGIN_REDIRECT_URL = '/api/v1/'
